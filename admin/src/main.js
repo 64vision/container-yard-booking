@@ -26,11 +26,6 @@ window.console = console
 console.log = function () {}
 registerPlugins(app)
 
-// app.use(VueGoogleMaps, {
-//     load: {
-//       key: "AIzaSyARNXm0oUGMMgm-nkHMnXsd6ixZmEnc8o0", // Replace with your API key
-//     },
-//   });
 
 app.mixin(hyper)
 app.use(store)
