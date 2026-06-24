@@ -25,8 +25,6 @@ app.config.globalProperties.$moment = moment;
 window.console = console
 console.log = function () {}
 registerPlugins(app)
-
-
 app.mixin(hyper)
 app.use(store)
 app.mount('#app')
