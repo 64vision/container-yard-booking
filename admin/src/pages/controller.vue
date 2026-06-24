@@ -1,0 +1,3 @@
+<template>
+  <RaceController />
+</template>

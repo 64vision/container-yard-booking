@@ -1,0 +1,4 @@
+
+<template>
+  <TransactionPage/>
+</template>

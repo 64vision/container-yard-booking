@@ -1,0 +1,80 @@
+.montserrat-hpb {
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+  }
+  .open-sans-hpb {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
+  }
+  
+
+#app .v-theme--light {
+    color: #4c4c4c;
+}
+.hpb-table {
+    width: 100%;
+    font-size: .95em;
+    
+}
+.hpb-table th {
+    font-weight: normal;
+}
+.hpb-table td {
+
+    font-weight: normal;
+    padding: 2px;
+}
+.account-menu {
+    background-color: #333;
+    color: #fff;
+}
+.hpb-table-border-bottom td, .hpb-table-border-bottom th {
+    border-bottom: 1px solid #ddd;
+}
+.profile-tbl td {
+    padding: 10px
+}
+
+.hp-date input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+.hp-head {
+    background-color: #1293a6;
+    padding: 5px;
+    color: #fff;
+}
+.td-even {
+    background-color: #f5f5f5;
+}
+.nav-list-text {
+    color:#efae58;
+}
+.v-toolbar-title__placeholder{
+    font-size:  .7em;
+}
+.text-cancelled-lined {
+    color: #999;
+    text-decoration: line-through;
+}
+.small-font {
+    font-size:.85em;
+}
+.amount_input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+.text-info {
+    color: #1293a6;
+}

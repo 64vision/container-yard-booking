@@ -1,0 +1,3 @@
+<template>
+  <LiveBets/>
+</template>
