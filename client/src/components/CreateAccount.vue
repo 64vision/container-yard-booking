@@ -1,14 +1,13 @@
 <template>
+  <div>
+        <PageHeader/>
+   <div class="pagehero">
   <v-container class="fill-height">
     <v-responsive
       class="align-centerfill-height mx-auto"
-      max-width="450"
+      max-width="650"
     >
-      <v-img
-         class="animate__animated animate__zoomIn"
-        height="100"
-        src="@/assets/hyperball.png"
-      />
+    
       <v-row>
         <v-col cols="12">
           <v-form
@@ -17,22 +16,39 @@
              v-model="valid"
              lazy-validation
           >
-          <v-card class="elevation-2 ma-5">
+          <div class="text-h4 font-weight-black text-center">
+                   REGISTER
+                </div>
+          <v-card class="elevation-2 ma-2">
             <v-card-text>
-              <p class="text-center mb-8 text-h6 font-weight-light">Create Account</p>
+              <p class="mb-1 font-weight-light"><v-icon left class="mr-2" color="warning">mdi-domain</v-icon>Company Details</p>
+                 <v-divider class="my-4" primary></v-divider>
               <v-text-field
-                label="Referral Code (Optional)"
+                label="Company Name"
                 density="compact"
                 outlined
-                v-model="referral"
+                :rules="textRules"
+                v-model="company_name"
               />
               <v-text-field
-                label="Mobile Number"
+                label="Company Address"
                 density="compact"
                 outlined
-                v-model="mobile"
-                        :rules="mobileRules"
+                v-model="company_address"
+                        :rules="textRules"
               />
+              <v-autocomplete
+                :items="['TRUCKER', 'BROOKER', 'FORWARDER', 'SHIPPING LINE']"
+                label="Company Type"
+                density="compact"
+                outlined
+                v-model="company_type"
+                :rules="textRules"
+              />
+
+            
+              <p class="mb-1 font-weight-light"><v-icon left class="mr-2" color="warning">mdi-account</v-icon> Contact Person</p>
+                <v-divider class="my-4" primary></v-divider>
               <v-text-field
                 label="First Name"
                 outlined
@@ -47,20 +63,35 @@
                 v-model="lastname"
                         :rules="lastRules"
               />
+             
+               <v-text-field
+                label="Contact Number"
+                outlined
+                density="compact"
+                v-model="mobile"
+                        :rules="mobileRules"
+              /> 
+                <p class="mb-1 font-weight-light"><v-icon left class="mr-2" color="warning">mdi-key</v-icon>Login Credentials</p>
+                <v-divider class="my-4" primary></v-divider>
+               <v-text-field
+                label="Email Address"
+                outlined
+                density="compact"
+                v-model="email"
+                        :rules="emailRules"
+              />
               <v-text-field
-                label="Enter your PIN"
+                label="Enter your password"
                 type="password"
                 density="compact"
-                class="mt-4"
                 outlined
                   v-model="password"
                         :rules="passRules"
               />
               <v-text-field
-                label="Re-enter PIN"
+                label="Re-enter Password"
                 density="compact"
                 type="password"
-                class="mt-4"
                 outlined
                   v-model="repassword"
               />
@@ -69,7 +100,7 @@
               :loading="loading"
               @click="loading=true,validate()"
             >
-            SIGN IN</v-btn>
+            register</v-btn>
             </div>
             
             
@@ -82,6 +113,8 @@
       
     </v-responsive>
   </v-container>
+  </div>
+  </div> 
 </template>
 
 <script>
@@ -93,15 +126,20 @@ import { md5 } from 'js-md5';
   export default {
     data: () => ({
       valid: true,
-      username: '',
-      referral:"",
+      email: '',
       mobile: '',
       firstname:'',
       lastname:'',
       password: '',
       repassword:'',
+      company_name:'',
+      company_address:'',
+      company_type:'',
+      textRules: [
+        v => !!v || 'Field is required'
+      ],
       nameRules: [
-        v => !!v || 'Please enter your fistname!'
+        v => !!v || 'Please enter your first name!'
       ],
       lastRules: [
         v => !!v || 'Please enter your last name!'
@@ -111,6 +149,10 @@ import { md5 } from 'js-md5';
       ],
       passRules: [
         v => !!v || 'Please enter your password!'
+      ],
+      emailRules: [
+        v => !!v || "Email is required",
+        v => /.+@.+\..+/.test(v) || "Invalid email",
       ],
       loading: false,
     }),
@@ -126,24 +168,8 @@ import { md5 } from 'js-md5';
         }
       },
       login () {
-        console.log("Login..")
-        api.post('account/login_by_password',{username: this.username, password: md5(this.password)})
-      .then(response => {
-         if(response.data.status) {
-          sessionStorage.setItem('token', response.data.token)
-          sessionStorage.setItem('account', JSON.stringify(response.data.account))
-          if(response.data.account.level ==1) {
-            this.AlertMsg("Permission Denied!","warning")
-          } else {
-            this.setLoggedIn(true)
-           this.$router.push('/dashboard')
-          }
-          
-         } else{
-            this.AlertMsg(response.data.message,"warning")
-         }
- 
-      })
+        console.log("Registering...")
+      
       }
     }
   }

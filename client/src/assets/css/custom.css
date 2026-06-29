@@ -176,7 +176,13 @@
 .tree details[open] > summary::before {
   background-position: calc(-2 * var(--radius)) 0;
 }
+.pagehero {
+  background: url('@/assets/bsbg3.png') no-repeat  center top;
+  
+  min-height: 500px;
+  color: #fff;
 
+}
 .hero {
   background: url('@/assets/bsbg3.png') no-repeat  left bottom;
   

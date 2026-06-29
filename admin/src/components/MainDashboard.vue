@@ -113,7 +113,7 @@
               <v-toolbar density="compact" title="Geographical distribution of the players" icon="mdi-plus"> </v-toolbar>
               <v-card-text>
  
-                            <HeatMap :locations="playersLocation"/>
+
                   </v-card-text>
             </v-card>
           </v-col>
@@ -189,11 +189,11 @@ import {
        this.setLoggedIn(true)  // Set loggedIn to true when an account is found in sessionStorage
        this._account = JSON.parse(sessionStorage.account)
        api.defaults.headers.common['Authorization'] = 'Bearer ' + sessionStorage.token
-       this.fetchSales()
-       this.fetchWin()
+      // this.fetchSales()
+      // this.fetchWin()
        this.fetchPlayers()
-       this.fetchLocation()
-       this.fetchSalesPerformance()
+      // this.fetchLocation()
+      // this.fetchSalesPerformance()
      }
   
     },

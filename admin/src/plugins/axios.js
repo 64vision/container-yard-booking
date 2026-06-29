@@ -3,8 +3,8 @@
 import { md5 } from 'js-md5';
 import axios from 'axios'
 import moment from "moment";
-//var SERVER = "http://"+window.location.hostname+":8100"
-const SERVER ="https://******"
+const SERVER = "http://"+window.location.hostname+":8100"
+// SERVER ="https://******"
 
 const api = axios.create({
   baseURL: SERVER + '/',

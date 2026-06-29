@@ -15,8 +15,8 @@ import moment from "moment";
 //import VueGoogleMaps from "@fawmi/vue-google-maps";
 import 'animate.css';
 
-window.console = console
-console.log = function () {}
+// window.console = console
+// console.log = function () {}
 // Composables
 import { createApp } from 'vue'
 

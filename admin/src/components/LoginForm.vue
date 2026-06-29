@@ -6,8 +6,8 @@
     >
       <v-img
         class="animate__animated animate__zoomIn"
-        height="200"
-        src="@/assets/hyperball.png"
+        height="140"
+        src="@/assets/logo.png"
       />
       <v-row>
         <v-col cols="12">

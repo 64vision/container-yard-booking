@@ -4,11 +4,7 @@
       class="align-centerfill-height mx-auto"
       max-width="450"
     >
-    <v-img
-       
-       height="100"
-       src="@/assets/hyperball.png"
-     />
+   
      <p>
       <v-img
        height="70"

@@ -3,7 +3,7 @@
         <template v-slot:prepend>
             <v-avatar>
       <v-img
-        src="@/assets/hyperball.png"
+        src="@/assets/avatar.png"
       ></v-img>
     </v-avatar>
   </template>
