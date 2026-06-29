@@ -168,7 +168,7 @@ import { md5 } from 'js-md5';
         }
       },
       login () {
-        console.log("Registering...")
+        console.log("Registering......")
       
       }
     }
