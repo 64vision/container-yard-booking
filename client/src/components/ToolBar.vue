@@ -1,14 +1,13 @@
 <template>
-     <v-app-bar color="white" density="compact">
-        <template v-slot:prepend>
-            <v-avatar  @click="goToPage('/')">
-      <v-img
-        src="@/assets/hyperball.png"
-      ></v-img>
-    </v-avatar>
-  </template>
+     <v-app-bar color="white" app elevation="1" >
+       <v-img
+          src="@/assets/logo.png"
+          alt="Zera Yard Booking"
+          max-width="70"
+          class="ma-2"
+        ></v-img>
        
-        <v-toolbar-title><span class="font-weight-thin">My Blazing Sphere</span></v-toolbar-title>
+        <v-toolbar-title><span class="font-weight-thin"></span></v-toolbar-title>
 
         <v-spacer></v-spacer>
 

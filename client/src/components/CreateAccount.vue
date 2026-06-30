@@ -86,14 +86,16 @@
                 density="compact"
                 outlined
                   v-model="password"
-                        :rules="passRules"
+                        :rules="passwordRules"
               />
               <v-text-field
-                label="Re-enter Password"
+                label="Confirm Password"
                 density="compact"
                 type="password"
                 outlined
+
                   v-model="repassword"
+                  :rules="confirmPasswordRules"
               />
               <div class="mt-8">
             <v-btn color="primary" block rounded size="x-large"
@@ -147,8 +149,9 @@ import { md5 } from 'js-md5';
       mobileRules: [
         v => !!v || 'Please enter your mobile'
       ],
-      passRules: [
-        v => !!v || 'Please enter your password!'
+      passwordRules: [
+        v => !!v || "Password is required",
+        v => v.length >= 8 || "Password must be at least 8 characters"
       ],
       emailRules: [
         v => !!v || "Email is required",
@@ -159,17 +162,53 @@ import { md5 } from 'js-md5';
     created(){
       
     },
+    computed: {
+    confirmPasswordRules() {
+      return [
+        v => !!v || "Please confirm your password",
+        v => v === this.password || "Passwords do not match"
+      ];
+    }
+  },
     methods:{
       ...mapMutations(['setLoggedIn']),
       validate () {
         this.loading=false
         if (this.$refs.form.validate()) {
+
           this.login()
         }
       },
       login () {
         console.log("Registering......")
-      
+        var params = {
+          username: this.email,
+          password: this.password,
+          first_name: this.firstname,    
+          last_name: this.lastname,
+          mobile_no: this.mobile,
+          company_name: this.company_name,
+          company_address: this.company_address,
+          company_type: this.company_type,
+          email: this.email
+        }
+          api.post('account/register', params)
+        .then(response => {
+          if(response.data.status) {
+            // sessionStorage.setItem('token', response.data.token)
+            // sessionStorage.setItem('account', JSON.stringify(response.data.account))
+            // this.setLoggedIn(true)
+            // this.$router.push('/')
+             this.AlertMsg(response.data.message,"success")
+            localStorage.setItem('email', this.email)
+             localStorage.setItem('_check', this.password)
+            this.$router.push('/verify')
+          
+          } else{
+              this.AlertMsg(response.data.message,"warning")
+          }
+          
+        })
       }
     }
   }
