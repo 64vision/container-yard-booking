@@ -1,3 +1,4 @@
+
 <template>
-  <SettingPage/>
+  <YardManagement/>
 </template>
