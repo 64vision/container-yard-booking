@@ -3,7 +3,7 @@
     
     <v-row no-gutters>
               <v-toolbar class="elevation-1" color="white" rounded>
-                <v-toolbar-title class="font-weight-bold"><v-icon size="large" class="mr-2" theme="dark">mdi-train-car-container</v-icon>Yards</v-toolbar-title>
+                <v-toolbar-title class="font-weight-bold"><v-icon size="large" class="mr-2" theme="dark">mdi-ferry</v-icon>Shipping Lines</v-toolbar-title>
                 <v-spacer></v-spacer>
             <div style="width: 350px;" class="mr-4">
           <v-text-field
@@ -39,7 +39,7 @@
                  
                   <th class="text-left">Name</th>
                   <th class="text-left">Address</th>
-                  <th class="text-left">Capacity</th>
+                  <!-- <th class="text-left">Capacity</th> -->
                   <th class="text-left">Status</th>
                   
                 </tr>
@@ -53,7 +53,7 @@
                    
                   </td>
                   <td>{{ item.address}}</td>
-                  <td>{{ item.Capacity}}</td>
+                    <!-- <td>{{ item.Capacity}}</td> -->
                 
                   <td>
                     <v-chip size="x-small" :color="Status(item.status)">
@@ -86,7 +86,7 @@
       </v-row>
      
   
-      <YardForm :show="actform" :state="state" :item_id="account.id" @FormEvent="FormEvent"/>
+      <ShippingForm :show="actform" :state="state" :item_id="account.id" @FormEvent="FormEvent"/>
     
   </v-container>
   </template>
@@ -108,7 +108,7 @@
         account:{},
         drawer: false,
         search:"",
-        accounts:[],
+        itemlist:[],
       _account:{}
       }),
       created: function () {
@@ -134,7 +134,7 @@
         },
         FILTERDATA(){
           if (this.search == "") {
-            return  this.accounts
+            return  this.itemlist
           } else {
               return this.searchItems()
           }
@@ -193,15 +193,15 @@
         
         getItems() {
           api.post('admin/qry',{
-                table: 'yards',
+                table: 'shippinglines',
                 type: 'query',
-                query: "select * from yards order by id desc"
+                query: "select * from shipping_lines order by id desc"
             })
         .then(response => {
           if(response.status) {
             console.log("Data: ",response.data)
-              this.accounts = response.data.yards
-              this.item_count = response.data.yards.length
+              this.itemlist = response.data.shippinglines
+                this.item_count = response.data.shippinglines.length
                 this.total_page_num = Math.ceil(this.item_count / this.per_page)
           }
         })

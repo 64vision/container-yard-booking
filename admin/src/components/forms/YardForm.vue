@@ -49,20 +49,33 @@
                       
                         <p class="font-weight-thin pa-1">Yard Owner</p>
                         <v-divider class="mb-4"/>
-                              
+                             
                             <v-select
-                              v-model="item.status"
-                              label="Status"
+                             v-if="owner.id != null"
+                              v-model="owner"
+                              label="Yard Owner"
                                 density="compact"
+                                 item-title="fullname"
                                 :rules="textrules"
-                                required
-                                :items="['Active','Deactivated']"
-                                
+                               return-object
+                                :items="operators"
+                                hide-details
                               >
+                               <template v-slot:item="{ props, item }">
+                              <v-list-item v-bind="props" 
+                                :title="`${item.raw.fullname}`"
+                                :subtitle="item.raw.company"
+                              />
+                            </template>
                               </v-select> 
+                             <div class="pa-2">
+                                <!-- <p>{{ owner.fullname }}</p> -->
+                                <p class="font-weight-thin font-italic">Company: {{ owner.company }}</p>
+
+                             </div>
+                              
                      
                         <v-divider class="mb-4"/>
-
                          <p class="font-weight-thin pa-1">Capacity and Rates</p>
                         <v-divider class="mb-4"/>
                            <v-row>
@@ -78,6 +91,7 @@
                                                     variant="solo"
                                                     hide-details
                                                     single-line
+                                                    suffix="/hr"
                                                     v-model="capacity.withdrawal_per_hour"
                                                     ></v-text-field>
                                                 </v-col>
@@ -93,6 +107,7 @@
                                                     variant="solo"
                                                     hide-details
                                                     single-line
+                                                    suffix="/hr"
                                                     v-model="capacity.return_per_hour"
                                                     ></v-text-field>
                                                 </v-col>
@@ -109,6 +124,7 @@
                                                     variant="solo"
                                                     hide-details
                                                     single-line
+                                                      suffix="/hr"
                                                     v-model="capacity.storage_per_hour"
                                                     ></v-text-field>
                                                 </v-col>
@@ -125,7 +141,7 @@
                                                     density="compact"
                                                     variant="solo"
                                                     hide-details
-                                                    prefix="PHP"
+                                                    suffix="PHP"
                                                     single-line
                                                     v-model="capacity.rate_due_per_hour"
                                                     ></v-text-field>
@@ -141,7 +157,7 @@
                                                     density="compact"
                                                     variant="solo"
                                                     hide-details
-                                                    prefix="PHP"
+                                                    suffix="PHP"
                                                     single-line
                                                     v-model="capacity.booking_rate"
                                                     ></v-text-field>
@@ -157,7 +173,7 @@
                                                     density="compact"
                                                     variant="solo"
                                                     hide-details
-                                                    prefix="PHP"
+                                                    suffix="PHP"
                                                     single-line
                                                     v-model="capacity.daily_storage_rate"
                                                     ></v-text-field>
@@ -173,7 +189,7 @@
                                                     density="compact"
                                                     variant="solo"
                                                     hide-details
-                                                    prefix="PHP"
+                                                    suffix="PHP"
                                                     single-line
                                                     v-model="capacity.document_fee"
                                                     ></v-text-field>
@@ -181,11 +197,6 @@
                                         </v-row>
                                 </v-col>
                            </v-row>   
-                             
-
-                            
-
-
                         <v-divider class="mb-4"/>
                      <v-btn 
                         v-if="state == 'edit'"
@@ -227,15 +238,12 @@ export default {
                 document_fee: 0.00
             },
         password: '',
-        confirm_password: "",
-        change_password: false,
+        operators:[],
+        owner: {},
          textrules: [
         v => !!v || 'This field is required',
       ],
-        passwordRules: [
-        v => !!v || "Password is required",
-        v => v.length >= 8 || "Password must be at least 8 characters"
-      ],
+ 
        emailRules: [
         v => !!v || "Email is required",
         v => /.+@.+\..+/.test(v) || "Invalid email",
@@ -260,12 +268,16 @@ export default {
   watch: {
     show(val) {
       this.drawer = val
- 
+      this.fetchOperator()
       if(val){
         if(this.state === "edit") {
           this.fetchItem()
+          setTimeout(()=>{
+            this.owner = this.operators.find(op => op.id === this.item.owner)
+          }, 1000)
         } else {
           this.item = {}
+          this.owner = {id: 0, fullname: "Select Yard Owner", company: ""}
         }
       }
     },
@@ -300,7 +312,7 @@ export default {
           
               setTimeout(()=>{
                 if(this.state === "new") {
-                  this.addAccount()
+                  this.addYard()
                 } else {
                   this.update()
                 }  
@@ -311,40 +323,35 @@ export default {
         },600)
         
       },
-    savePassword(){
-      var newpassword = md5(this.password.trim())
-       api.post('/admin/qry',{
+     fetchOperator(){
+        api.post('/admin/qry',{
           table: 'administrators',
-          type: 'update account',
-          query: "update administrators set password='"+ newpassword+"'where id="+this.item_id
+          type: 'query',
+          query: `select id, fullname, company from administrators where role='Yard Operator' order by id desc`
       })
       .then(response => {
         if(response.status) {
             console.log(this.item_id, response.data)
-            this.fetchAccount()
-            this.AlertMsg(response.data.message,"success")
-              this.change_password = false
-        } else {
-            this.AlertMsg(response.data.message,"warning")
+           this.operators = response.data.administrators
+          
         }
-      })
-    },//202cb962ac59075b964b07152d234b70
-    addAccount(){
-        console.log("Registering new account")
+      }) 
+     },  
+    addYard(){
+        console.log("Registering new yard")
          api.post('/admin/qry',{
-          table: 'administrators',
+          table: 'yards',
           type: 'update account',
-          query: `INSERT INTO administrators 
-      (username, fullname, email, mobile_no, status, role, company, password, created_at) 
-      VALUES ('${this.account.username}', '${this.account.fullname}', '${this.account.email}', 
-              '${this.account.mobile_no}', '${this.account.status}', '${this.account.role}', 
-              '${this.account.company}', '${md5(this.password)}', NOW())`
+          query: `INSERT INTO yards 
+      (name, address, status, capacity, owner) 
+      VALUES ('${this.item.name}', '${this.item.address}', '${this.item.status}', 
+              '${JSON.stringify(this.capacity)}', '${this.owner.id}')`
       })
       .then(response => {
         if(response.status) {
             console.log(response.data)
            // this.fetchAccount()
-            this.AlertMsg('New account has been created',"success")
+            this.AlertMsg('New yard has been created',"success")
             this.drawer = false
           
         } else {
@@ -355,14 +362,17 @@ export default {
     },
     update(){
         api.post('/admin/qry',{
-          table: 'administrators',
+          table: 'yards',
           type: 'update account',
-          query: "update administrators set username='"+ this.account.username+"', fullname='"+ this.account.fullname+"', email='"+ this.account.email+"', mobile_no='"+ this.account.mobile_no+"', status='"+ this.account.status+"' , role='"+ this.account.role+"', company='"+ this.account.company+"'   where id="+this.item_id
+          query: `update yards set name='${this.item.name}', address='${this.item.address}',
+           status='${this.item.status}', 
+           capacity='${JSON.stringify(this.capacity)}',
+          owner='${this.owner.id}' where id=${this.item_id}`
       })
       .then(response => {
         if(response.status) {
             console.log(this.item_id, response.data)
-            this.fetchAccount()
+            this.fetchItem()
             this.AlertMsg(response.data.message,"success")
           
         } else {
@@ -384,6 +394,7 @@ export default {
         if(response.status) {
             console.log(this.item_id, response.data)
            this.item = response.data.yards[0]
+           this.capacity = this.item.capacity
           
         }
       })
