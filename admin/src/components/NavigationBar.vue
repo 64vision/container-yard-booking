@@ -33,6 +33,7 @@
           <v-divider></v-divider>
         
           <v-list density="compact" nav>
+             <v-list-item prepend-icon="mdi-calendar-clock" title="Slots" value="accounts" @click="goToPage('/slots')"></v-list-item>
              <v-list-item prepend-icon="mdi-account-supervisor-circle" title="Operators" value="accounts" @click="goToPage('/operators')"></v-list-item>
             <v-list-item prepend-icon="mdi-train-car-container" title="Yards" value="Yards" @click="goToPage('/yards')"></v-list-item>
             <v-list-item prepend-icon="mdi-ferry" title="Shipping Lines" value="Shipping Lines" @click="goToPage('/shippings')"></v-list-item>
