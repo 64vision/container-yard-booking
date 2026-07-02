@@ -12,49 +12,49 @@
 
             
           <v-card tile width="900" style="margin: auto;">
-           <v-card-title><v-icon>mdi-cogs</v-icon> Game Settings</v-card-title>
-            <v-card-text>
-          <table class="hpb-table hpb-table-border-bottom">
-            <thead>
-              <tr >
-                <th class="text-left">Game</th>
-                <th class="text-left">Win</th>
-                <th class="text-left">Description</th>
-                <th class="text-right">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in games_settings" :key="item.id">
-                <td class="pa-2">{{ item.game}}</td>
-                <td class="pa-2">
-                   {{Money(item.win)}}
-                </td>
-                <td class="pa-2">{{ item.description}}</td>
-                <td class="pa-2 text-right">{{ item.status}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </v-card-text>
-        </v-card>
-        <v-card tile width="900" style="margin: auto;">
-           <v-card-title><v-icon>mdi-cogs</v-icon> System Settings</v-card-title>
+           <v-card-title><v-icon>mdi-cogs</v-icon> Settings</v-card-title>
             <v-card-text>
           <table class="hpb-table hpb-table-border-bottom">
             <thead>
               <tr >
                 <th class="text-left">Name</th>
                 <th class="text-left">Value</th>
+                <th class="text-right">Status</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in sys_settings" :key="item.id">
+              <tr v-for="item in itemlist" :key="item.id">
                 <td class="pa-2">{{ item.name}}</td>
-                <td class="pa-2">{{ item.value}}</td>
+                <td class="pa-2">
+                  <v-textarea
+                    rows="1"  
+                    density="compact"
+                    variant="solo"
+                    hide-details
+                    single-line
+                    v-model="item.value"
+                     @change="update(item)"
+                    ></v-textarea>
+                </td>
+                <td class="pa-2 text-right">
+                 
+                  <v-switch
+                  v-model="item.status"
+                  @change="update(item)"
+                  value="enabled"
+                  hide-details
+                  color="success"
+                  true-icon="mdi-check"
+                  false-icon="mdi-close"
+                ></v-switch>
+
+                </td>
               </tr>
             </tbody>
           </table>
         </v-card-text>
         </v-card>
+       
     </v-col>
     </v-row>
 </v-container>
@@ -71,8 +71,7 @@ import {
       loading: false,
       valid: true,
       drawer: false,
-      games_settings:[],
-      sys_settings:[],
+      itemlist:[],
     }),
     created: function () {
      console.log(sessionStorage.account)
@@ -94,17 +93,39 @@ import {
     methods: {
       ...mapMutations(['setLoggedIn']),
     
-      
-      getItems() {
-        api.get('/settings/get',)
+ update(item){
+        api.post('/admin/qry',{
+          table: 'settings',
+          type: 'update account',
+          query: `update settings set status='${item.status}', value='${item.value}' where id=${item.id}`
+      })
       .then(response => {
         if(response.status) {
-          console.log(response.data)
-            this.games_settings = response.data.games.settings
-            this.sys_settings = response.data.sys.sys
+            this. getItems()
+            this.AlertMsg(response.data.message,"success")
+          
+        } else {
+            this.AlertMsg(response.data.message,"warning")
         }
+       
       })
-      }
+    
+    },
+       getItems() {
+          api.post('admin/qry',{
+                table: 'settings',
+                type: 'query',
+                query: "select * from settings order by id desc"
+            })
+        .then(response => {
+          if(response.status) {
+            console.log("Data: ",response.data)
+              this.itemlist = response.data.settings
+                this.item_count = response.data.settings.length
+                this.total_page_num = Math.ceil(this.item_count / this.per_page)
+          }
+        })
+        }
     }
     
   }
